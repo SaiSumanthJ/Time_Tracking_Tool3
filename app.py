@@ -182,6 +182,12 @@ def activate_employee(emp_id):
     save_data(data)
     return f"<h1>Activation Successful!</h1><p>Hi {emp['name']}, you can now download the tracker app: <a href='/static/{TRACKER_APP_FILENAME}'>Download</a></p>"
 
+@app.route('/download-tracker', methods=['GET'])
+def download_tracker():
+    try:
+        return send_from_directory(directory='static', filename=TRACKER_APP_FILENAME, as_attachment=True)
+    except Exception as e:
+        return str(e), 404
 
 # --- Main Entry Point ---
 if __name__ == "__main__":
