@@ -182,8 +182,6 @@ def activate_employee(emp_id):
     save_data(data)
     return f"<h1>Activation Successful!</h1><p>Hi {emp['name']}, you can now download the tracker app: <a href='/static/{TRACKER_APP_FILENAME}'>Download</a></p>"
 
-    else:
-        return "<h1>Invalid Activation Link</h1>"
 
 # --- Main Entry Point ---
 if __name__ == "__main__":
