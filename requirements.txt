@@ -1,0 +1,6 @@
+Flask
+sendgrid
+requests
+pillow
+flask-cors
+gunicorn
