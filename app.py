@@ -181,13 +181,32 @@ def get_screenshots():
 def activate_employee(emp_id):
     data = load_data()
     emp = next((e for e in data['employees'] if e['id'] == emp_id), None)
-    if not emp:
+    if emp:
+        emp['active'] = True
+        save_data(data)
+        download_script = """
+        <h1>Activation Successful!</h1>
+        <p>Hi {name}, download the tracker app parts below. All files are required.</p>
+        <button onclick="downloadAll()">Download All Parts</button>
+        <script>
+        function downloadAll() {{
+            const parts = ['tracker_app.zip.001', 'tracker_app.zip.002', 'tracker_app.zip.003', 'tracker_app.zip.004', 'tracker_app.zip.005'];
+            parts.forEach(part => {{
+                const a = document.createElement('a');
+                a.href = '/static/' + part;
+                a.download = part;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }});
+        }}
+        </script>
+        <p>After downloading, open <b>tracker_app.zip.001</b> with <b>7-Zip</b> to extract and auto-merge.</p>
+        """.format(name=emp['name'])
+        return download_script
+    else:
         return "<h1>Invalid Activation Link</h1>"
-    if emp.get('active', False):
-        return f"<h1>Already Activated</h1><p>Hi {emp['name']}, you have already activated your account. <a href='/static/{TRACKER_APP_FILENAME}'>Download Tracker App</a></p>"
-    emp['active'] = True
-    save_data(data)
-    return f"<h1>Activation Successful!</h1><p>Hi {emp['name']}, you can now download the tracker app: <a href='/static/{TRACKER_APP_FILENAME}'>Download</a></p>"
+
 
 @app.route('/download-tracker', methods=['GET'])
 def download_tracker():
