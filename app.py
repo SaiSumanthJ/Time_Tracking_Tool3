@@ -42,16 +42,16 @@ def generate_id():
     return str(uuid.uuid4())
 
 def send_activation_email(employee):
-    activation_link = f"https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME')}/activate/{employee['id']}"
-    email_content = f"""
-    Hi {employee['name']},
-    
-    Please activate your account by clicking the link below:
-    {activation_link}
-    
-    Once activated, download the tracker here:
-    https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME')}/static/{TRACKER_APP_FILENAME}
-    """
+    download_link = f"https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME')}/download-tracker"
+email_content = f"""
+Hi {employee['name']},
+
+Please activate your account by clicking the link below:
+https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME')}/activate/{employee['id']}
+
+Once activated, download the tracker here:
+{download_link}
+"""
     sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
     message = Mail(
         from_email=SENDER_EMAIL,
@@ -61,6 +61,9 @@ def send_activation_email(employee):
     )
     sg.send(message)
     print(f"Activation email sent to {employee['email']}")
+    
+
+
 
 # --- API Endpoints ---
 @app.route('/employee', methods=['POST'])
